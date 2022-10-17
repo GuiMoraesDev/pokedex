@@ -78,7 +78,7 @@ interface PokemonVersionsSpritesProps {
   front_shiny_female: string | null;
 }
 
-export interface PokemonSpritesProps {
+interface PokemonSpritesProps {
   back_default: string | null;
   back_female: string | null;
   back_shiny: string | null;
