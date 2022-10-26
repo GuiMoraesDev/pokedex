@@ -1,13 +1,17 @@
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
+import { ChangeEvent, useCallback, useState } from "react";
+import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import type { NextPage } from "next";
-import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
 
 import PokeCard from "../components/PokeCard";
 
 import { getPokemonList } from "../services/api.pokemon";
 
 const Home: NextPage = () => {
-  const { data } = useQuery(["pokemon"], getPokemonList);
+  const { data } = useQuery(["pokemon"], getPokemonList, {
+    staleTime: 24 * 60 * 60 * 1000, //24 hours
+    refetchOnWindowFocus: false,
+  });
 
   const [filteredResults, setFilteredResults] = useState(data?.results);
 
@@ -45,7 +49,9 @@ const Home: NextPage = () => {
 
       <div className="container grid grid-cols-3 content-end items-end justify-end gap-4">
         {filteredResults?.map((pokemon) => (
-          <PokeCard key={pokemon.id} {...pokemon} />
+          <Link href={`/pokemon/${pokemon.id}`} key={pokemon.id}>
+            <PokeCard {...pokemon} />
+          </Link>
         ))}
       </div>
     </div>

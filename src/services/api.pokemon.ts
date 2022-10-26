@@ -1,5 +1,5 @@
-import { getPokemonIdByUrl } from "../utils/getPokemonIdByUrl";
 import { api } from "./api";
+import { getPokemonIdByUrl } from "../utils/getPokemonIdByUrl";
 
 export interface PokemonProps {
   id: string;
@@ -163,7 +163,7 @@ interface PokemonStatsProps {
   };
 }
 
-interface PokemonTypesProps {
+export interface PokemonTypesProps {
   slot: number;
   type: {
     name: string;
@@ -179,6 +179,7 @@ export interface GetSinglePokemonProps {
   height: number;
   held_items: string[];
   id: number;
+  pokeNumber: string;
   is_default: boolean;
   location_area_encounters: string;
   moves: PokemonMovesProps[];
@@ -195,5 +196,10 @@ export interface GetSinglePokemonProps {
 export const getSinglePokemon = async (id: string) => {
   const response = await api.get<GetSinglePokemonProps>(`/pokemon/${id}`);
 
-  return response.data;
+  const data = {
+    ...response.data,
+    pokeNumber: String(response.data.id).padStart(3, "0"),
+  };
+
+  return data;
 };
