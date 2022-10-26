@@ -1,27 +1,52 @@
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import type { NextPage } from "next";
+import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
+
+import PokeCard from "../components/PokeCard";
 
 import { getPokemonList } from "../services/api.pokemon";
-import { getPokemonIdByUrl } from "../utils/getPokemonIdByUrl";
-import PokeCard from "../components/PokeCard";
 
 const Home: NextPage = () => {
   const { data } = useQuery(["pokemon"], getPokemonList);
 
+  const [filteredResults, setFilteredResults] = useState(data?.results);
+
+  const handleFilterPokemon = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.target;
+
+      const isNaN = Number.isNaN(Number(value));
+
+      setFilteredResults(() =>
+        value
+          ? data?.results.filter((pokemon) =>
+              isNaN
+                ? pokemon.name.includes(value.toLowerCase())
+                : pokemon.pokeNumber.includes(value)
+            )
+          : data?.results
+      );
+    },
+    [data?.results]
+  );
+
   return (
-    <div>
+    <div className="container m-auto flex w-full max-w-5xl flex-col justify-center gap-4">
       <header>
         <h1 className="bold text-center text-6xl">Pokédex</h1>
       </header>
 
-      <input className="p-2" type="text" />
+      <input
+        className="rounded-md border-2 p-2"
+        type="text"
+        placeholder="Search by pokemon name"
+        onChange={handleFilterPokemon}
+      />
 
-      <div className="container m-auto grid grid-cols-3 gap-4 p-3">
-        {data?.results.map((item, index) => {
-          const id = getPokemonIdByUrl(item.url);
-
-          return <PokeCard key={id} id={id} name={item.name} />;
-        })}
+      <div className="container grid grid-cols-3 content-end items-end justify-end gap-4">
+        {filteredResults?.map((pokemon) => (
+          <PokeCard key={pokemon.id} {...pokemon} />
+        ))}
       </div>
     </div>
   );

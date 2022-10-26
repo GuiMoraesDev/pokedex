@@ -1,19 +1,32 @@
+import { getPokemonIdByUrl } from "../utils/getPokemonIdByUrl";
 import { api } from "./api";
 
+export interface PokemonProps {
+  id: string;
+  pokeNumber: string;
+  name: string;
+  url: string;
+}
 export interface GetPokemonProps {
   count: number;
   next: string | null;
   previous: string | null;
-  results: {
-    name: string;
-    url: string;
-  }[];
+  results: PokemonProps[];
 }
 
 export const getPokemonList = async () => {
   const response = await api.get<GetPokemonProps>("/pokemon");
 
-  return response.data;
+  const data = {
+    ...response.data,
+    results: response.data.results.map((pokemon) => {
+      const id = getPokemonIdByUrl(pokemon.url);
+
+      return { ...pokemon, id, pokeNumber: id.padStart(3, "0") };
+    }),
+  };
+
+  return data;
 };
 
 interface PokemonAbilitiesProps {
