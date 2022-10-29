@@ -1,23 +1,16 @@
-import { ArrowArcLeft } from "phosphor-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { getSinglePokemon } from "../../services/api.pokemon";
-import { pokeImageLoader } from "../../utils/pokeImageLoader";
-import { pokeTypes } from "../../utils/pokeTypes";
+import { getSinglePokemon } from "../../../src/services/api.pokemon";
+import { pokeTypes } from "../../../src/utils/pokeTypes";
 
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
+type Props = {
+  params: { id: string };
+  searchParams: {};
+};
 
-const PokemonDetail = (): JSX.Element => {
-  const router = useRouter();
-  const { id } = router.query;
-
-  const { data } = useQuery([`pokemon_${id}`], () =>
-    getSinglePokemon(String(id))
-  );
-
-  console.log(data);
+export default async function Page({ params }: Props) {
+  const data = await getSinglePokemon(params.id);
 
   return (
     <div className="container m-auto flex h-full w-full flex-col items-center justify-center">
@@ -25,7 +18,7 @@ const PokemonDetail = (): JSX.Element => {
         href="/"
         className="will-change-all fixed top-4 left-4 flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105"
       >
-        <ArrowArcLeft /> Back
+        Back
       </Link>
 
       <div
@@ -50,13 +43,12 @@ const PokemonDetail = (): JSX.Element => {
 
         <Image
           className="h-72 w-auto"
-          loader={pokeImageLoader}
-          src={`${id}.png`}
-          alt={data?.name || String(id)}
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`}
+          alt={data?.name}
           width="0"
           height={150}
           sizes="100%"
-          priority={Number(id) < 12}
+          priority={Number(data.id) < 12}
         />
 
         <p className="text-2xl font-medium capitalize text-slate-900">
@@ -70,6 +62,4 @@ const PokemonDetail = (): JSX.Element => {
       </div>
     </div>
   );
-};
-
-export default PokemonDetail;
+}

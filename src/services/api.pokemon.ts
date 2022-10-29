@@ -1,33 +1,27 @@
-import { api } from "./api";
+import { GetPokemonListProps } from "../@types";
 import { getPokemonIdByUrl } from "../utils/getPokemonIdByUrl";
 
-export interface PokemonProps {
-  id: string;
-  pokeNumber: string;
-  name: string;
-  url: string;
-}
-export interface GetPokemonProps {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: PokemonProps[];
-}
+export async function getPokemonListData(
+  offset = 0
+): Promise<GetPokemonListProps> {
+  const response = await fetch(
+    `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`
+  );
 
-export const getPokemonList = async () => {
-  const response = await api.get<GetPokemonProps>("/pokemon");
+  const data: GetPokemonListProps = await response.json();
 
-  const data = {
-    ...response.data,
-    results: response.data.results.map((pokemon) => {
+  const incrementedData = {
+    ...data,
+    results: data.results.map((pokemon) => {
       const id = getPokemonIdByUrl(pokemon.url);
+      const pokeNumber = id.padStart(3, "0");
 
-      return { ...pokemon, id, pokeNumber: id.padStart(3, "0") };
+      return { ...pokemon, id, pokeNumber };
     }),
   };
 
-  return data;
-};
+  return incrementedData;
+}
 
 interface PokemonAbilitiesProps {
   ability: {
@@ -194,12 +188,16 @@ export interface GetSinglePokemonProps {
 }
 
 export const getSinglePokemon = async (id: string) => {
-  const response = await api.get<GetSinglePokemonProps>(`/pokemon/${id}`);
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 
-  const data = {
-    ...response.data,
-    pokeNumber: String(response.data.id).padStart(3, "0"),
+  const data: GetSinglePokemonProps = await response.json();
+
+  const pokeNumber = id.padStart(3, "0");
+
+  const incrementedData = {
+    ...data,
+    pokeNumber,
   };
 
-  return data;
+  return incrementedData;
 };
