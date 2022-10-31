@@ -10,7 +10,10 @@ export default async function RootLayout({
       <head>
         <title>Pokédex</title>
       </head>
-      <body>{children}</body>
+
+      <body className="bg-gradient-to-b from-red-700 to-red-600">
+        {children}
+      </body>
     </html>
   );
 }

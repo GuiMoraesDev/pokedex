@@ -1,15 +1,16 @@
-import PokemonList from "../src/components/PokemonList";
-import { getPokemonListData } from "../src/services/api.pokemon";
+import ReactQueryContext from "../src/context/ReactQueryContext";
+import PokemonList from "../src/patterns/PokemonList";
 
-export default async function Page() {
-  const initialData = await getPokemonListData();
-
+export default function Page() {
   return (
-    <div className="container m-auto flex max-w-3xl flex-col justify-center items-center gap-8 px-6 pb-6">
+    <main className="container m-auto flex h-screen max-w-3xl flex-col items-center justify-center gap-8 overflow-hidden">
       <header>
-        <h1 className="bold text-center text-6xl">Pokédex</h1>
+        <h1 className="bold text-center text-6xl text-yellow-400">Pokédex</h1>
       </header>
-      <PokemonList initialData={initialData} />
-    </div>
+
+      <ReactQueryContext>
+        <PokemonList />
+      </ReactQueryContext>
+    </main>
   );
 }

@@ -5,7 +5,7 @@ export async function getPokemonListData(
   offset = 0
 ): Promise<GetPokemonListProps> {
   const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=21`
+    `https://pokeapi.co/api/v2/pokemon?offset=${offset * 21}&limit=21`
   );
 
   const data: GetPokemonListProps = await response.json();
