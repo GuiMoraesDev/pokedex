@@ -13,7 +13,7 @@ export default async function Page({ params }: Props) {
   const data = await getSinglePokemon(params.id);
 
   return (
-    <div className="container m-auto flex h-full w-full flex-col items-center justify-center">
+    <div className="container m-auto flex h-full w-full select-none flex-col items-center justify-center">
       <Link
         href="/"
         className="will-change-all fixed top-4 left-4 flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105"
@@ -48,16 +48,18 @@ export default async function Page({ params }: Props) {
           width="0"
           height={150}
           sizes="100%"
-          priority={Number(data.id) < 12}
+          priority
         />
 
-        <p className="text-2xl font-medium capitalize text-slate-900">
+        <p className="select-text text-2xl font-medium capitalize text-slate-900">
           {data?.name}
         </p>
 
         <div className="flex flex-col items-center justify-center gap-px">
-          <p>Weight: {data?.weight! / 10} kilograms</p>
-          <p>Height: {data?.height! / 10} centimeters</p>
+          <p className="select-text">Weight: {data?.weight! / 10} kilograms</p>
+          <p className="select-text">
+            Height: {data?.height! / 10} centimeters
+          </p>
         </div>
       </div>
     </div>
