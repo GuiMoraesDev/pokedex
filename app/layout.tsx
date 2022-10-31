@@ -7,7 +7,9 @@ export default async function RootLayout({
 }) {
   return (
     <html>
-      <head></head>
+      <head>
+        <title>Pokédex</title>
+      </head>
       <body>{children}</body>
     </html>
   );
