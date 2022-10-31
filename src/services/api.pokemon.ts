@@ -1,11 +1,13 @@
 import { GetPokemonListProps } from "../@types";
 import { getPokemonIdByUrl } from "../utils/getPokemonIdByUrl";
 
+const POKE_QTD = 9;
+
 export async function getPokemonListData(
   offset = 0
 ): Promise<GetPokemonListProps> {
   const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon?offset=${offset * 21}&limit=21`
+    `https://pokeapi.co/api/v2/pokemon?offset=${offset * POKE_QTD}&limit=${POKE_QTD}`
   );
 
   const data: GetPokemonListProps = await response.json();

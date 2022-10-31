@@ -11,9 +11,7 @@ export default async function RootLayout({
         <title>Pokédex</title>
       </head>
 
-      <body className="bg-gradient-to-b from-red-700 to-red-600">
-        {children}
-      </body>
+      <body className="bg-slate-50">{children}</body>
     </html>
   );
 }

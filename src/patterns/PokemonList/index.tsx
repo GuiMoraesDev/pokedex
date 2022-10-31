@@ -4,10 +4,10 @@ import { useCallback, useMemo, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import Button from "../components/Button";
-import Input from "../components/Input";
-import PokeCard from "../components/PokeCard";
-import { getPokemonListData } from "../services/api.pokemon";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
+import { getPokemonListData } from "../../services/api.pokemon";
+import PokeCard from "../PokeCard";
 
 export default function PokemonList() {
   const [offset, setOffset] = useState(0);
@@ -47,7 +47,7 @@ export default function PokemonList() {
   }, [data?.count, data?.results.length]);
 
   return (
-    <div className="container m-auto flex h-screen max-w-3xl flex-col items-start justify-center gap-8 overflow-hidden">
+    <>
       <Input
         type="search"
         placeholder="Search by pokemon name or number"
@@ -74,6 +74,6 @@ export default function PokemonList() {
           Next page
         </Button>
       </nav>
-    </div>
+    </>
   );
 }

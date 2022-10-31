@@ -3,14 +3,19 @@ import PokemonList from "../src/patterns/PokemonList";
 
 export default function Page() {
   return (
-    <main className="container m-auto flex h-screen max-w-3xl flex-col items-center justify-center gap-8 overflow-hidden">
-      <header>
-        <h1 className="bold text-center text-6xl text-yellow-400">Pokédex</h1>
-      </header>
+    <main className="container m-auto flex h-screen max-w-xl flex-col items-start justify-center gap-8 overflow-hidden p-4">
+      <h1 className="text-4xl font-bold">Pokédex</h1>
 
-      <ReactQueryContext>
-        <PokemonList />
-      </ReactQueryContext>
+      <p className="text-slate-600">
+        Gives background information on the habitat or activities of a Pokemon
+        in the wild or the other information on the Pokemon history or anatomy
+      </p>
+
+      <div className="container m-auto flex h-screen max-w-3xl flex-col items-start justify-center gap-8 overflow-hidden">
+        <ReactQueryContext>
+          <PokemonList />
+        </ReactQueryContext>
+      </div>
     </main>
   );
 }
