@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import { getPokemonListData } from "../../services/api.pokemon";
+import { getPokemonListData, POKE_QTD } from "../../services/api.pokemon";
 import PokeCard from "../PokeCard";
 
 export default function PokemonList() {
@@ -38,12 +38,21 @@ export default function PokemonList() {
     return data;
   }, [data, search]);
 
+  const handleFirstPage = useCallback(() => {
+    setOffset((state) => state > 0 && 0);
+  }, []);
+
   const handlePrevPage = useCallback(() => {
     setOffset((state) => state > 0 && --state);
   }, []);
 
   const handleNextPage = useCallback(() => {
-    setOffset((state) => data.results.length < data.count && ++state);
+    if (data.results.length < data.count) setOffset((state) => ++state);
+  }, [data?.count, data?.results.length]);
+
+  const handleLastPage = useCallback(() => {
+    if (data.results.length < data.count)
+      setOffset((data.count - POKE_QTD) / POKE_QTD);
   }, [data?.count, data?.results.length]);
 
   return (
@@ -55,25 +64,47 @@ export default function PokemonList() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <div className="container grid w-full select-none grid-cols-3 gap-8 overflow-y-auto overflow-x-hidden scroll-smooth p-2 scrollbar-none">
+      <div className="container grid w-full select-none grid-cols-3 gap-6 overflow-y-auto overflow-x-hidden scroll-smooth p-2 scrollbar-none">
         {filteredList?.results.map((pokemon, index) => (
           <PokeCard index={index} key={pokemon.id} {...pokemon} />
         ))}
       </div>
 
-      <nav className="container flex w-full items-center justify-between">
-        <Button type="button" onClick={handlePrevPage} disabled={offset <= 0}>
-          Previous page
-        </Button>
+      <section className="container flex w-full items-center justify-between">
+        <p>
+          Showing {offset * POKE_QTD + POKE_QTD} of {data?.count}
+        </p>
 
-        <Button
-          type="button"
-          onClick={handleNextPage}
-          disabled={data?.results.length >= data?.count}
-        >
-          Next page
-        </Button>
-      </nav>
+        <nav className="flex gap-4">
+          <Button
+            type="button"
+            onClick={handleFirstPage}
+            disabled={offset <= 0}
+          >
+            <span className="ph-caret-double-left" />
+          </Button>
+
+          <Button type="button" onClick={handlePrevPage} disabled={offset <= 0}>
+            <span className="ph-caret-left" />
+          </Button>
+
+          <Button
+            type="button"
+            onClick={handleNextPage}
+            disabled={offset * POKE_QTD + POKE_QTD >= data?.count}
+          >
+            <span className="ph-caret-right" />
+          </Button>
+
+          <Button
+            type="button"
+            onClick={handleLastPage}
+            disabled={offset * POKE_QTD + POKE_QTD >= data?.count}
+          >
+            <span className="ph-caret-double-right" />
+          </Button>
+        </nav>
+      </section>
     </>
   );
 }

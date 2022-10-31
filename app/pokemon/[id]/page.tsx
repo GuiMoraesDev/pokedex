@@ -18,7 +18,7 @@ export default async function Page({ params }: Props) {
         href="/"
         className="will-change-all fixed top-4 left-4 flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105"
       >
-        Back
+        <span className="ph-arrow-arc-left" /> Back
       </Link>
 
       <div

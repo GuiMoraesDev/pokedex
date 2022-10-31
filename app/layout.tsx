@@ -9,6 +9,7 @@ export default async function RootLayout({
     <html>
       <head>
         <title>Pokédex</title>
+        <script src="https://unpkg.com/phosphor-icons" async defer></script>
       </head>
 
       <body className="bg-slate-50">{children}</body>

@@ -1,7 +1,7 @@
 import { GetPokemonListProps } from "../@types";
 import { getPokemonIdByUrl } from "../utils/getPokemonIdByUrl";
 
-const POKE_QTD = 9;
+export const POKE_QTD = 9;
 
 export async function getPokemonListData(
   offset = 0
