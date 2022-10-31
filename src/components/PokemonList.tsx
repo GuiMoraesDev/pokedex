@@ -37,7 +37,7 @@ export default function PokemonList({ initialData }: Props) {
     <>
       <input
         className="rounded-md border-2 p-2"
-        type="text"
+        type="search"
         placeholder="Search by pokemon name or number"
         onChange={(e) => handleFilterList(e)}
       />
