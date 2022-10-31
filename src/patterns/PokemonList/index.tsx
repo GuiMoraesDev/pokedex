@@ -12,7 +12,7 @@ import PokeCard from "../PokeCard";
 export default function PokemonList() {
   const pokeWrapperListRef = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(36);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
   const [search, setSearch] = useState("");
 
   const { data } = useQuery(
@@ -127,10 +127,20 @@ export default function PokemonList() {
           />
           54
         </label>
+        <label className="flex items-center justify-center gap-px">
+          <input
+            type="radio"
+            name="items-page"
+            checked={itemsPerPage === 54}
+            value={54}
+            onChange={() => setItemsPerPage(54)}
+          />
+          54
+        </label>
       </header>
 
       <div
-        className="container grid h-full w-full select-none grid-cols-3 gap-4 overflow-y-auto scroll-smooth p-2"
+        className="grid h-full w-full select-none gap-4 overflow-y-auto scroll-smooth p-2 sm:grid-cols-1 md:grid-cols-3"
         ref={pokeWrapperListRef}
       >
         {filteredList?.results.length ? (

@@ -1,18 +1,20 @@
 import "../src/styles/global.css";
 
+type Props = {
+  children: React.ReactNode;
+};
+
 export default async function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Props) {
   return (
-    <html>
+    <html className="h-screen w-screen">
       <head>
         <title>Pokédex</title>
         <script src="https://unpkg.com/phosphor-icons" async defer></script>
       </head>
 
-      <body className="bg-slate-50">{children}</body>
+      <body className="h-screen w-screen bg-slate-50">{children}</body>
     </html>
   );
 }
