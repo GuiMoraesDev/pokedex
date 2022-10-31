@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -10,13 +10,20 @@ import { getPokemonListData } from "../../services/api.pokemon";
 import PokeCard from "../PokeCard";
 
 export default function PokemonList() {
+  const pokeWrapperListRef = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(36);
   const [search, setSearch] = useState("");
 
   const { data } = useQuery(
     ["pokemon", offset, itemsPerPage],
-    async () => getPokemonListData(offset, itemsPerPage),
+    async () => {
+      pokeWrapperListRef.current?.scroll({
+        top: 0,
+        behavior: "smooth",
+      });
+      return getPokemonListData(offset, itemsPerPage);
+    },
     {
       keepPreviousData: true,
     }
@@ -40,20 +47,43 @@ export default function PokemonList() {
   }, [data, search]);
 
   const handleFirstPage = useCallback(() => {
-    setOffset((state) => state > 0 && 0);
-  }, []);
+    if (offset > 0) {
+      setOffset(0);
+      pokeWrapperListRef.current?.scroll({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [offset]);
 
   const handlePrevPage = useCallback(() => {
-    setOffset((state) => state > 0 && --state);
-  }, []);
+    if (offset > 0) {
+      setOffset((state) => --state);
+      pokeWrapperListRef.current?.scroll({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [offset]);
 
   const handleNextPage = useCallback(() => {
-    if (data?.results.length < data?.count) setOffset((state) => ++state);
+    if (data?.results.length < data?.count) {
+      setOffset((state) => ++state);
+      pokeWrapperListRef.current?.scroll({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   }, [data?.count, data?.results.length]);
 
   const handleLastPage = useCallback(() => {
-    if (data?.results.length < data?.count)
+    if (data?.results.length < data?.count) {
       setOffset((data?.count - itemsPerPage) / itemsPerPage);
+      pokeWrapperListRef.current?.scroll({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   }, [data?.count, data?.results.length, itemsPerPage]);
 
   return (
@@ -81,16 +111,6 @@ export default function PokemonList() {
           <input
             type="radio"
             name="items-page"
-            checked={itemsPerPage === 18}
-            value={18}
-            onChange={() => setItemsPerPage(18)}
-          />
-          18
-        </label>
-        <label className="flex items-center justify-center gap-px">
-          <input
-            type="radio"
-            name="items-page"
             checked={itemsPerPage === 36}
             value={36}
             onChange={() => setItemsPerPage(36)}
@@ -109,7 +129,10 @@ export default function PokemonList() {
         </label>
       </header>
 
-      <div className="container grid h-full w-full select-none grid-cols-3 gap-4 overflow-y-auto scroll-smooth p-2">
+      <div
+        className="container grid h-full w-full select-none grid-cols-3 gap-4 overflow-y-auto scroll-smooth p-2"
+        ref={pokeWrapperListRef}
+      >
         {filteredList?.results.length ? (
           filteredList?.results.map((pokemon, index) => (
             <PokeCard index={index} key={pokemon.id} {...pokemon} />
