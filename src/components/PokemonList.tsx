@@ -36,18 +36,18 @@ export default function PokemonList({ initialData }: Props) {
   return (
     <>
       <input
-        className="rounded-md border-2 p-2"
+        className="rounded-md border-2 p-2 w-full max-w-3xl"
         type="search"
         placeholder="Search by pokemon name or number"
         onChange={(e) => handleFilterList(e)}
       />
 
-      <div className="container grid grid-cols-3 content-end items-end justify-end gap-4">
+      <div className="container grid select-none grid-cols-3 gap-8 w-full">
         {filteredList.results.map((pokemon) => (
           <Link href={`/pokemon/${pokemon.id}`} key={pokemon.id}>
-            <div className="will-change-all container flex flex-1 flex-col items-center justify-evenly rounded-md border-2 p-4 text-xl transition-all duration-200 hover:scale-105">
+            <div className="will-change-all container relative flex flex-col items-center justify-evenly rounded-md border-2 p-6 text-xl transition-all duration-200 hover:scale-105">
               <Image
-                className="h-36 w-auto"
+                className="min-h-fit aspect-square w-auto"
                 src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
                 alt={pokemon.name}
                 width="0"
@@ -55,10 +55,12 @@ export default function PokemonList({ initialData }: Props) {
                 sizes="100%"
                 priority={Number(pokemon.id) < 12}
               />
-              <p className="text-center capitalize text-slate-900">
+              <p className="select-text text-center capitalize text-slate-900">
                 {pokemon.name}
               </p>
-              <p className="text-center text-slate-600">{pokemon.pokeNumber}</p>
+              <span className="absolute top-1 right-1 select-text text-center text-slate-600">
+                {pokemon.pokeNumber}
+              </span>
             </div>
           </Link>
         ))}
