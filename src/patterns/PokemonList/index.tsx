@@ -1,21 +1,22 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import { getPokemonListData, POKE_QTD } from "../../services/api.pokemon";
+import { getPokemonListData } from "../../services/api.pokemon";
 import PokeCard from "../PokeCard";
 
 export default function PokemonList() {
   const [offset, setOffset] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(36);
   const [search, setSearch] = useState("");
 
   const { data } = useQuery(
-    ["pokemon", offset],
-    async () => getPokemonListData(offset),
+    ["pokemon", offset, itemsPerPage],
+    async () => getPokemonListData(offset, itemsPerPage),
     {
       keepPreviousData: true,
     }
@@ -27,7 +28,7 @@ export default function PokemonList() {
     if (search) {
       return {
         ...data,
-        results: data.results.filter((pokemon) =>
+        results: data?.results.filter((pokemon) =>
           isSearchAnInteger
             ? pokemon.pokeNumber.includes(search)
             : pokemon.name.includes(search.toLowerCase())
@@ -47,13 +48,13 @@ export default function PokemonList() {
   }, []);
 
   const handleNextPage = useCallback(() => {
-    if (data.results.length < data.count) setOffset((state) => ++state);
+    if (data?.results.length < data?.count) setOffset((state) => ++state);
   }, [data?.count, data?.results.length]);
 
   const handleLastPage = useCallback(() => {
-    if (data.results.length < data.count)
-      setOffset((data.count - POKE_QTD) / POKE_QTD);
-  }, [data?.count, data?.results.length]);
+    if (data?.results.length < data?.count)
+      setOffset((data?.count - itemsPerPage) / itemsPerPage);
+  }, [data?.count, data?.results.length, itemsPerPage]);
 
   return (
     <>
@@ -64,15 +65,64 @@ export default function PokemonList() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <div className="container grid w-full select-none grid-cols-3 gap-6 overflow-y-auto overflow-x-hidden scroll-smooth p-2 scrollbar-none">
-        {filteredList?.results.map((pokemon, index) => (
-          <PokeCard index={index} key={pokemon.id} {...pokemon} />
-        ))}
+      <header className="flex items-center justify-center gap-2">
+        Items per page
+        <label className="flex items-center justify-center gap-px">
+          <input
+            type="radio"
+            name="items-page"
+            checked={itemsPerPage === 9}
+            value={9}
+            onChange={() => setItemsPerPage(9)}
+          />
+          9
+        </label>
+        <label className="flex items-center justify-center gap-px">
+          <input
+            type="radio"
+            name="items-page"
+            checked={itemsPerPage === 18}
+            value={18}
+            onChange={() => setItemsPerPage(18)}
+          />
+          18
+        </label>
+        <label className="flex items-center justify-center gap-px">
+          <input
+            type="radio"
+            name="items-page"
+            checked={itemsPerPage === 36}
+            value={36}
+            onChange={() => setItemsPerPage(36)}
+          />
+          36
+        </label>
+        <label className="flex items-center justify-center gap-px">
+          <input
+            type="radio"
+            name="items-page"
+            checked={itemsPerPage === 54}
+            value={54}
+            onChange={() => setItemsPerPage(54)}
+          />
+          54
+        </label>
+      </header>
+
+      <div className="container grid h-full w-full select-none grid-cols-3 gap-4 overflow-y-auto scroll-smooth p-2">
+        {filteredList?.results.length ? (
+          filteredList?.results.map((pokemon, index) => (
+            <PokeCard index={index} key={pokemon.id} {...pokemon} />
+          ))
+        ) : (
+          <p>No pokemon founded</p>
+        )}
       </div>
 
       <section className="container flex w-full items-center justify-between">
         <p>
-          Page {Math.floor(offset + 1)} of {Math.floor(data?.count / POKE_QTD)}
+          Page {Math.floor(offset + 1)} of{" "}
+          {Math.floor(data?.count / itemsPerPage)}
         </p>
 
         <nav className="flex gap-4">
@@ -91,7 +141,7 @@ export default function PokemonList() {
           <Button
             type="button"
             onClick={handleNextPage}
-            disabled={offset * POKE_QTD + POKE_QTD >= data?.count}
+            disabled={offset * itemsPerPage + itemsPerPage >= data?.count}
           >
             <span className="ph-caret-right" />
           </Button>
@@ -99,7 +149,7 @@ export default function PokemonList() {
           <Button
             type="button"
             onClick={handleLastPage}
-            disabled={offset * POKE_QTD + POKE_QTD >= data?.count}
+            disabled={offset * itemsPerPage + itemsPerPage >= data?.count}
           >
             <span className="ph-caret-double-right" />
           </Button>
