@@ -72,7 +72,7 @@ export default function PokemonList() {
 
       <section className="container flex w-full items-center justify-between">
         <p>
-          Showing {offset * POKE_QTD + POKE_QTD} of {data?.count}
+          Page {Math.floor(offset + 1)} of {Math.floor(data?.count / POKE_QTD)}
         </p>
 
         <nav className="flex gap-4">
