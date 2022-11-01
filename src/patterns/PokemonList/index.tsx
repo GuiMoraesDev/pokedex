@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -140,7 +140,7 @@ export default function PokemonList() {
       </header>
 
       <div
-        className="grid h-full w-full select-none gap-4 overflow-y-auto scroll-smooth p-2 sm:grid-cols-1 md:grid-cols-3"
+        className="grid min-h-[485px] h-full w-full select-none gap-4 scroll-smooth p-2 sm:grid-cols-1 md:grid-cols-3"
         ref={pokeWrapperListRef}
       >
         {filteredList?.results.length ? (
