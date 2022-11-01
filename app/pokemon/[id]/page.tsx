@@ -11,8 +11,6 @@ type Props = {
 export default async function Page({ params }: Props) {
   const data = await getSinglePokemon(params.id);
 
-  console.log(data);
-
   return (
     <div
       className={`relative grid h-screen w-screen select-none grid-cols-1 grid-rows-2 items-center justify-center gap-2 p-2 ${
@@ -21,13 +19,14 @@ export default async function Page({ params }: Props) {
     >
       <Link
         href="/"
+        replace
         className="will-change-all fixed top-4 left-4 z-10 flex items-center justify-center gap-2 rounded-full bg-white p-2 font-semibold transition-all duration-200 hover:scale-105"
       >
         <span className="ph-arrow-arc-left" /> Back
       </Link>
 
       <div
-        className={`container relative m-auto flex h-full w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-md border-2 p-3 ${
+        className={`container relative m-auto flex h-full w-full max-w-xl flex-col items-center justify-center gap-3 overflow-hidden rounded-md border-2 p-3 ${
           pokeTypes[data?.types[0].type.name].border
         } ${pokeTypes[data?.types[0].type.name].light}`}
       >
@@ -71,7 +70,7 @@ export default async function Page({ params }: Props) {
       </div>
 
       <ul
-        className={`container relative m-auto grid h-full w-full grid-cols-2 grid-rows-3 items-center justify-between gap-4 overflow-hidden`}
+        className={`container relative m-auto grid h-full w-full max-w-xl grid-cols-2 grid-rows-3 items-center justify-between gap-4 overflow-hidden`}
       >
         {data.stats.map((stat) => {
           const statName = stat.stat.name.replace(/-/g, " ");
